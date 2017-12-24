@@ -3,7 +3,7 @@ const path = require("path");
 
 const src = "../nodeHw1/source/";
 const dest = "../nodeHw1/dest/";
-const readDir =  (src, level) => {
+const readDir = (src, level) => {
     const files = fs.readdirSync(src);
     files.forEach(item => {
         let local = path.join(src, item);
@@ -16,15 +16,14 @@ const readDir =  (src, level) => {
                     if (!fs.existsSync(`./dest/${item.charAt(0)}/`)) {
                         fs.mkdirSync(`./dest/${item.charAt(0)}/`);
                     }
-                    fs.link (local, `dest/${item.charAt(0)}/${item}`, function(
-                        err,
-                        data
-                    ) {
-                        if (err) {
-                            console.log(err);
-                        }
-                       fs.unlinkSync(local);
-                    });
+                    let start = async () => {
+                        await fs.linkSync(
+                            local,
+                            `dest/${item.charAt(0)}/${item}`
+                        );
+                        await fs.unlinkSync(local);
+                    };
+                    start();
                 }
             }
         }
